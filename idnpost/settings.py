@@ -130,8 +130,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,"static/"),
 ]
 
-STATIC_ROOT = '/home/idnposti/public_html/static/'
-MEDIA_ROOT = '/home/idnposti/public_html/media/'
+STATIC_ROOT = dbs.STATIC_ROOT
+MEDIA_ROOT = dbs.MEDIA_ROOT
 
 
 
