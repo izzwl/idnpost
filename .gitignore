@@ -1,0 +1,8 @@
+.htaccess
+*.pyc
+*.pdf
+*.sqlite3
+idnpost/dbs.py
+**/.vscode
+**/tmp
+**/__pycache__
