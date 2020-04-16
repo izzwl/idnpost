@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from . import dbs
+from . import utils
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -43,6 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'ckeditor',
+    'ckeditor_uploader',
+    'web.apps.WebConfig',
+    'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [
@@ -133,6 +139,17 @@ STATICFILES_DIRS = [
 STATIC_ROOT = dbs.STATIC_ROOT
 MEDIA_ROOT = dbs.MEDIA_ROOT
 
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_RESTRICT_BY_DATE = True
+# CKEDITOR_FILENAME_GENERATOR = utils.get_upload_filename
 
-
-
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        # 'height': 300,
+        # 'width': 300,
+    },
+    'awesome_ckeditor': {
+        'toolbar': 'Basic',
+    },
+}

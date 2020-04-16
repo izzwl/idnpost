@@ -1,0 +1,95 @@
+{% extends 'web/base.html' %}
+{% load static humanize %}  
+
+
+
+{% block maincontent %}
+{% now "Y" as current_year %}
+{% now "d" as current_day %}
+<div class="site-section">
+    <div class="container">
+      <div class="row justify-content-around">
+        <div class="col-lg-7 ">
+          <div class="section-title">
+            <h2>Recent News</h2>
+          </div>
+          {% for rc in recent_posts %}
+          <div class="post-entry-2 d-flex">
+            <div class="thumbnail order-md-2" style="background-image: url('{{rc.thumbnail.url}}')"></div>
+            <div class="contents order-md-1 pl-0">
+              <h2><a href="{% url 'blog:read_post' rc.category.url rc.url %}l">{{rc.heading}}</a></h2>
+              <p class="mb-3">{{rc.snippet}}</p>
+              <div class="post-meta">
+                <span class="d-block"><a href="#">{{rc.writer.first_name}} {{rc.writer.last_name}}</a> in <a href="{% url 'blog:category' rc.category.url %}">{{rc.category.name}}</a></span>
+                <span class="date-read">
+                    {% if current_year == rc.dt_add|date:"Y" %}
+                        {% if current_day == rc.dt_add|date:"d" %}
+                            {{rc.dt_add|naturaltime}}
+                        {% else %}
+                            {{rc.dt_add|date:'N d'}}
+                        {% endif %}
+                    {% else %}
+                        {{rc.dt_add|date:'N d, Y'}}
+                    {% endif %}
+                    <span class="mx-1">&bullet;</span> {{rc.read_time}} min read <span class="icon-star2"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="col-lg-3">
+          <div class="section-title">
+            <h2>Popular Posts</h2>
+          </div>
+
+          {% for pp in popular_posts %}
+
+          <div class="trend-entry d-flex">
+            <div class="number align-self-start">{{forloop.counter|stringformat:'02d'}}</div>
+            <div class="trend-contents">
+              <h2><a href="{% url 'blog:read_post' pp.category.url pp.url %}">{{pp.heading}}</a></h2>
+              <div class="post-meta">
+                <span class="d-block"><a href="#">{{pp.writer.first_name}} {{pp.writer.last_name}}</a> in <a href="{% url 'blog:category' pp.category.url %}">{{pp.category.name}}</a></span>
+                <span class="date-read">
+                    {% if current_year == pp.dt_add|date:"Y" %}
+                        {% if current_day == pp.dt_add|date:"d" %}
+                            {{pp.dt_add|naturaltime}}
+                        {% else %}
+                            {{pp.dt_add|date:'N d'}}
+                        {% endif %}
+                    {% else %}
+                        {{pp.dt_add|date:'N d, Y'}}
+                    {% endif %}
+                    <span class="mx-1">&bullet;</span> {{pp.read_time}} min read <span class="icon-star2"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+          
+
+          <p>
+            <a href="#" class="more">See All Popular <span class="icon-keyboard_arrow_right"></span></a>
+          </p>
+        </div>
+      </div>
+
+
+      </div>
+
+      <div class="row justify-content-md-center">
+        <div class="col-lg-6">
+          <ul class="custom-pagination list-unstyled">
+            <li><a href="#">1</a></li>
+            <li class="active">2</li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

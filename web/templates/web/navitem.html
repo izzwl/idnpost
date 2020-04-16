@@ -1,0 +1,5 @@
+{% for c in categories %}
+    <li>
+    <a href="{% url 'blog:category' c.url %}" class="nav-link text-left">{{c.name}}</a>
+    </li>
+{% endfor %}

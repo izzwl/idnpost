@@ -1,0 +1,68 @@
+{% extends 'web/base.html' %}
+{% load static humanize %}  
+
+{% block navlogo %}
+<a href="index.html" class="site-logo">
+  idnpost.id - {{category.name}}
+</a>
+{% endblock %}
+
+{% block maincontent %}
+{% now "Y" as current_year %}
+{% now "d" as current_day %}
+    <div class="site-section">
+    <div class="container">
+      <div class="row justify-content-md-center">
+        <div class="col-lg-8 single-content">
+
+          <p class="mb-5">
+            <img src="{{post.thumbnail.url}}" alt="Image" class="img-fluid">
+          </p>
+          <h1 class="mb-4">
+            {{post.heading}}
+          </h1>
+          <div class="post-meta d-flex mb-5">
+            <div class="bio-pic mr-3">
+              <img src="" alt="WriterImage" class="img-fluidid">
+            </div>
+            <div class="vcard">
+              <span class="d-block"><a href="#">{{post.writer.first_name}} {{post.writer.last_name}}</a> in <a href="{% url 'blog:category' category.url %}">{{category.name}}</a></span>
+              <span class="date-read">
+                {% if current_year == post.dt_add|date:"Y" %}
+                    {% if current_day == post.dt_add|date:"d" %}
+                        {{post.dt_add|naturaltime}}
+                    {% else %}
+                        {{post.dt_add|date:'N d'}}
+                    {% endif %}
+                {% else %}
+                    {{post.dt_add|date:'N d, Y'}}
+                {% endif %} 
+                  <span class="mx-1">&bullet;</span> {{post.read_time}} min read <span class="icon-star2"></span>
+                </span>
+            </div>
+          </div>
+            {{post.content|safe}}
+          <div class="pt-5">
+                <p>Categories:  
+                    <a href="{% url 'blog:category' post.category.url %}">{{ post.category.name }}</a>, 
+                    {% for cr in post.categories_set.all %}
+                     {% if cr.url != post.category.url %}
+                    <a href="{% url 'blog:category' cr.url %}">{{ cr.name }}</a>
+                    {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+
+      </div>
+      <div class="row justify-content-md-center">
+        <div class="col-lg-8">
+          <div class="section-title">
+            <h2>Artikel Terkait</h2>
+          </div>
+      </div>
+    </div>
+    </div>
+
+
+{% endblock %}
