@@ -4,7 +4,7 @@
 
 <head>
   {% block head %}
-    <title>{% block title %}idnpost &mdash; --moto idnpost--{% endblock %}</title>
+    <title>{% block title %}{{settings.site_title}}&mdash;{{settings.tagline}}{% endblock %}</title>
     {% block meta %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -55,7 +55,7 @@
         <div class="row align-items-center">
           <div class="col-12 col-lg-6 d-flex">
             {% block navlogo %}
-            <a href="index.html" class="site-logo">
+            <a href="/" class="site-logo">
               idnpost.id
             </a>
             {% endblock %}
@@ -99,7 +99,7 @@
                     {% include 'web/navitem.html' %}
                   {% endblock %}
                   <li>
-                    <a href="contact.html" class="nav-link text-left">Contact</a>
+                    <a href="{% url 'blog:contact' %}" class="nav-link text-left">Contact</a>
                   </li>
                   {% endblock %}
                 </ul>
@@ -118,7 +118,28 @@
           {% include 'web/carousels.html' %}
         {% endif %}
       {% endblock %}
-
+      
+      {% block flashmessage %}
+      {{messages}}
+        {% if messages %}
+        <div class="site-section bg-light pb-0">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+          {% for m in messages %}
+            {% if m.tags == 'error' %}
+            <div class="alert alert-danger">{{m}}</div>      
+            {% else %}
+            <div class="alert alert-{{m.tags|lower}}">{{m}}</div>      
+            {% endif %}
+          {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>      
+        {% endif %}
+      {% endblock %}
+     
       {% block maincontent %}{% endblock %}
       
       {% block subscribe %}
@@ -127,12 +148,12 @@
           <form action="#" class="row align-items-center">
             <div class="col-md-5 mr-auto">
               <h2>Newsletter Subcribe</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis aspernatur ut at quae omnis pariatur obcaecati possimus nisi ea iste!</p>
+              <p>{{settings.subscribe_text}}</p>
             </div>
             <div class="col-md-6 ml-auto">
               <div class="d-flex">
-                <input type="email" class="form-control" placeholder="Enter your email">
-                <button type="submit" class="btn btn-secondary" ><span class="icon-paper-plane"></span></button>
+                <input type="email" id='subscribe-email' class="form-control" placeholder="Enter your email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                <button type="submit" id='subscribe-email-submit' class="btn btn-secondary" ><span class="icon-paper-plane"></span></button>
               </div>
             </div>
           </form>
@@ -186,6 +207,17 @@
   <script src="{% static 'idnpost-theme/js/jquery.sticky.js' %}"></script>
   <script src="{% static 'idnpost-theme/js/jquery.mb.YTPlayer.min.js' %}"></script>
   <script src="{% static 'idnpost-theme/js/main.js' %}"></script>
+  <script>
+    var email = $('#subscribe-email').val();
+    $('#subscribe-email-submit').click(function(e){
+      e.preventDefault();
+      $.get("{% url 'blog:subscribe' %}"+"?email="+$('#subscribe-email').val(),function(data,status){
+        alert(data.pesan);
+      });
+    })
+    
+  </script>
+
   {% endblock %}
   {% block extrascript %}{% endblock %}
 

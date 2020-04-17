@@ -17,7 +17,7 @@
           <div class="post-entry-2 d-flex">
             <div class="thumbnail order-md-2" style="background-image: url('{{rc.thumbnail.url}}')"></div>
             <div class="contents order-md-1 pl-0">
-              <h2><a href="{% url 'blog:read_post' rc.category.url rc.url %}l">{{rc.heading}}</a></h2>
+              <h2><a href="{% url 'blog:read_post' rc.category.url rc.url %}">{{rc.heading}}</a></h2>
               <p class="mb-3">{{rc.snippet}}</p>
               <div class="post-meta">
                 <span class="d-block"><a href="#">{{rc.writer.first_name}} {{rc.writer.last_name}}</a> in <a href="{% url 'blog:category' rc.category.url %}">{{rc.category.name}}</a></span>

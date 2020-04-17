@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post,Category,Tag
+from .models import Post,Category,Tag,ViewerMessage,Subscriber,Setting
 # Register your models here.
 
 class PostAdmin(admin.ModelAdmin):
@@ -24,6 +24,18 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('name','url',)
     fields = ('url','name',)
 
+class SettingAdmin(admin.ModelAdmin):
+    list_display = ('name','value',)
+    fields = ('name','value',)
+    readonly_fields = ('name',)
+    def has_add_permission(self,request):
+        return False
+    def has_delete_permission(self,request,obj=None):
+        return False
+
 admin.site.register(Post,PostAdmin)
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(Tag,TagAdmin)
+admin.site.register(Subscriber)
+admin.site.register(ViewerMessage)
+admin.site.register(Setting,SettingAdmin)

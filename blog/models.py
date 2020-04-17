@@ -5,9 +5,15 @@ from django.contrib.auth.models import User
 from django.utils.deconstruct import deconstructible
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
+from django.core.validators import RegexValidator
 from ckeditor_uploader.fields import RichTextUploadingField
 from ckeditor.fields import RichTextField
 
+
+phone_regex = RegexValidator(
+    regex=r'^\+?1?\d{9,15}$',
+    message=_("Phone number must be entered in the format: '+99999999' up to 15 digits allowed")
+)
 @deconstructible
 class UploadImage(object):
     def __init__(self, sub_path):
@@ -73,15 +79,32 @@ class Post(models.Model):
         if not self.url:
             self.url = slugify(self.heading)
         super().save(*args,**kwargs)
+
 class PostRating(models.Model):
     dt_add = models.DateTimeField(_('Date Expire'),auto_now_add=True)
     viewer = models.ForeignKey(User,on_delete=models.SET_NULL,verbose_name=_('Viewer'),null=True,default=None)
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
     rate = models.PositiveIntegerField(_('Total Read'))
 
+class ViewerMessage(models.Model):
+    first_name = models.CharField(_('First Name'),max_length=20)
+    last_name = models.CharField(_('Last Name'),max_length=20,blank=True)
+    email = models.EmailField(_('Email'))
+    phone = models.CharField(_('Phone'),blank=True,validators=[phone_regex],max_length=16)
+    message = models.TextField(_('Message'))
+    def __str__(self):
+        return self.email
 
+class Subscriber(models.Model):    
+    email = models.EmailField(_('Email'))
+    def __str__(self):
+        return self.email
 
-
+class Setting(models.Model):
+    name = models.CharField(_('Name'),max_length=25)
+    value = models.CharField(_('Value'),max_length=255)
+    def __str__(self):
+        return self.name
 
 @receiver(models.signals.post_delete, sender=Post)
 def auto_delete_post_image_on_delete(sender, instance, **kwargs):
