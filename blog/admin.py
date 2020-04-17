@@ -2,6 +2,10 @@ from django.contrib import admin
 from .models import Post,Category,Tag,ViewerMessage,Subscriber,Setting
 # Register your models here.
 
+admin.site.site_title = 'idnpost.id site admin'
+admin.site.site_header = 'idnpost.id administration'
+admin.site.index_title = 'idnpost.id administration'
+
 class PostAdmin(admin.ModelAdmin):
     list_display = (
         'url','writer','category','dt_add','total_view','is_picked','is_active','dt_expire',
