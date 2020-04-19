@@ -10,15 +10,27 @@ class PostAdmin(admin.ModelAdmin):
     list_display = (
         'url','writer','category','dt_add','total_view','is_picked','is_active','dt_expire',
     )
+    list_filter = ('writer','category','tags','is_active')
     fields = (
         'thumbnail','url','dt_expire','is_active','is_picked','category','categories','tags',
         'heading','snippet','content'
+    )
+    search_fields = (
+        'heading','snippet','writer__username','writer__first_name','category__name'
     )
     def save_model(self, request, obj, form, change):
         if not obj.pk:
             obj.writer = request.user
         obj.read_time = ( len(obj.content.split(' ')) + 1 ) // 250
         super().save_model(request, obj, form, change)
+    
+    def has_change_permission(self,request,obj=None):
+        if request.user.is_superuser:
+            return True
+        if obj:
+            return bool(obj.writer==request.user)
+        return False
+
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name','url',)

@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('blog.urls')),
-    path('admin/', admin.site.urls),
+    path('T4-403/', admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 if settings.DEBUG:
