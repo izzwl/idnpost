@@ -13,7 +13,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('writer','category','tags','is_active')
     fields = (
         'thumbnail','url','dt_expire','is_active','is_picked','category','categories','tags',
-        'heading','snippet','content'
+        'heading','snippet','content','source'
     )
     search_fields = (
         'heading','snippet','writer__username','writer__first_name','category__name'

@@ -68,16 +68,17 @@ class Post(models.Model):
     categories = models.ManyToManyField(Category,verbose_name=_('Other Category'),related_name='categories')
     tags = models.ManyToManyField(Tag,verbose_name=_('Tags'))
     heading = models.CharField(_('Heading'),max_length=255)
+    source = models.CharField(_('Source'),max_length=255,blank=True)
     snippet = models.TextField(_('Snippet'))
     content = RichTextUploadingField(_('Content'))
-    thumbnail = models.ImageField(upload_to=upload_thumbnail, height_field='thumbnail_width', width_field='thumbnail_width')
+    thumbnail = models.ImageField(upload_to=upload_thumbnail, height_field='thumbnail_height', width_field='thumbnail_width')
     thumbnail_width = models.PositiveIntegerField(default=0)
     thumbnail_height = models.PositiveIntegerField(default=0)
     def __str__(self):
         return self.heading
     def save(self,*args,**kwargs):
         if not self.url:
-            self.url = slugify(self.heading)
+            self.url = slugify(self.heading) 
         super().save(*args,**kwargs)
 
 class PostRating(models.Model):

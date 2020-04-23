@@ -55,6 +55,10 @@ def read_post(request,category,post,template_name='web/read_post.html'):
     except:
         return HttpResponse(status=404)    
     
+    if post:
+        post.total_view += 1
+        post.save()
+         
     active_post = Post.objects.select_related('writer','category',).prefetch_related('tags')\
         .filter(Q(is_active=True) and Q( Q(category=category) or Q(categories=category) ))\
         .distinct()
