@@ -67,7 +67,7 @@ class Post(models.Model):
     writer = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,verbose_name=_('Writer'))
     read_time = models.PositiveIntegerField(_('Read Time Estimation'))
     total_view = models.PositiveIntegerField(_('Total Read'),default=0)
-    dt_add = models.DateTimeField(_('Date Expire'),auto_now_add=True)
+    dt_add = models.DateTimeField(_('Date Add'),auto_now_add=True)
     dt_expire = models.DateTimeField(_('Date Expire'),null=True,default=None,blank=True)
     is_active = models.BooleanField(_('Active'),default=False)
     is_picked = models.BooleanField(_('Editor Pick'),default=False)

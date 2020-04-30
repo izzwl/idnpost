@@ -41,9 +41,9 @@ def load_more(request):
         filter_category = Q()
 
     active_post = Post.objects.select_related('writer','category',).prefetch_related('tags')\
-        .order_by('-dt_add').filter(
-            Q(is_active=True,dt_add__lt=last_post.dt_add) and filter_category
-        )
+        .filter(
+            Q(is_active=True) and Q(dt_add__lt=last_post.dt_add) and filter_category
+        ).order_by('-dt_add')[:5]
     post_list = []
     for ap in active_post:
         data = {
