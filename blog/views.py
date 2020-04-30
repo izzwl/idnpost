@@ -41,8 +41,8 @@ def load_more(request):
         filter_category = Q()
 
     active_post = Post.objects.select_related('writer','category',).prefetch_related('tags')\
-        .filter(
-            Q(is_active=True) and Q(dt_add__lt=last_post.dt_add) and filter_category
+        .filter(filter_category).filter(
+            Q(is_active=True) and Q(dt_add__lt=last_post.dt_add)
         ).order_by('-dt_add')[:5]
     post_list = []
     for ap in active_post:
@@ -57,10 +57,11 @@ def load_more(request):
             'category__url':ap.category.url,
             'category__name':ap.category.name,
             'dt_add':ap.dt_add.strftime('%b %d, %Y'),
+            'dt_add_real':ap.dt_add,
             'read_time':ap.read_time,
         }
         post_list.append(data)
-    return JsonResponse({'data':post_list})
+    return JsonResponse({'last_post':{'id':last_post.id,'dt_add':last_post.dt_add},'data':post_list})
 
 def categorized(request,category,template_name='web/category.html'):
     try:
@@ -68,8 +69,8 @@ def categorized(request,category,template_name='web/category.html'):
     except:
         return HttpResponse(status=404)
     active_post = Post.objects.select_related('writer','category',).prefetch_related('tags')\
-        .filter(Q(is_active=True) and Q( Q(category=category) or Q(categories=category) ))\
-        .distinct()
+        .filter(Q( Q(category=category) or Q(categories=category) ))\
+        .distinct().filter(Q(is_active=True))
     context = {
         'settings':get_setting(request),
         'category':category,
