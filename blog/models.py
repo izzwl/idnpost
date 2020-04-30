@@ -20,12 +20,19 @@ class UploadImage(object):
         self.sub_path = sub_path
 
     def __call__(self, instance, filename):
-        dt = instance.dt_add
+        try:
+            dt = instance.dt_add
+        except:
+            dt = None
         ext = filename.split('.')[-1]
         filename = '{}.{}'.format(instance.url, ext)
-        return os.path.join(self.sub_path, str(dt.year), str(dt.month), filename)
+        if dt:
+            return os.path.join(self.sub_path, str(dt.year), str(dt.month), filename)
+        else:
+            return os.path.join(self.sub_path, filename)
 
 upload_thumbnail = UploadImage('post-images/')
+upload_category = UploadImage('category-images/')
 
 # Create your models here.
 class Page(models.Model):
@@ -34,7 +41,7 @@ class Page(models.Model):
 class Category(models.Model):
     url = models.SlugField(unique=True,blank=True)
     name = models.CharField(max_length=25)
-    thumbnail = models.ImageField(upload_to=upload_thumbnail, height_field='thumbnail_height', width_field='thumbnail_width', blank=True)
+    thumbnail = models.ImageField(upload_to=upload_category, height_field='thumbnail_height', width_field='thumbnail_width', blank=True)
     thumbnail_width = models.PositiveIntegerField(default=0)
     thumbnail_height = models.PositiveIntegerField(default=0)
     def __str__(self):

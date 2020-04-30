@@ -9,12 +9,12 @@
 <div class="site-section">
     <div class="container">
       <div class="row justify-content-around">
-        <div class="col-lg-7 ">
+        <div class="col-lg-7 " id='post-list'>
           <div class="section-title">
             <h2>Recent News</h2>
           </div>
           {% for rc in recent_posts %}
-          <div class="post-entry-2 d-flex">
+          <div class="post-entry-2 d-flex idpost" data-idpost="{{rc.pk}}">
             <div class="thumbnail order-md-2" style="background-image: url('{{rc.thumbnail.url}}')"></div>
             <div class="contents order-md-1 pl-0">
               <h2><a href="{% url 'blog:read_post' rc.category.url rc.url %}">{{rc.heading}}</a></h2>
@@ -82,14 +82,47 @@
 
       <div class="row justify-content-md-center">
         <div class="col-lg-6">
-          <ul class="custom-pagination list-unstyled">
+          <!-- <ul class="custom-pagination list-unstyled">
             <li><a href="#">1</a></li>
             <li class="active">2</li>
             <li><a href="#">3</a></li>
             <li><a href="#">4</a></li>
-          </ul>
+          </ul> -->
+          <button id='load_more' class="btn btn-primary">Load more..</button>
         </div>
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block extrascript %}
+  <script>
+  $('#load_more').click(function(e){
+    var last_id = $("div.idpost:last").data('idpost'); 
+    e.preventDefault();
+    $.get("{% url 'blog:load_more' %}?last_id="+last_id, function(res){
+      console.log(res.data);
+      res.data.map(function(d){
+        var html =`
+          <div class="post-entry-2 d-flex idpost" data-idpost="${d.id}">
+            <div class="thumbnail order-md-2" style="background-image: url('${d.thumbnail__url}')"></div>
+            <div class="contents order-md-1 pl-0">
+              <h2><a href="/${d.category__url}/${d.url}">${d.heading}</a></h2>
+              <p class="mb-3">${d.snippet}</p>
+              <div class="post-meta">
+                <span class="d-block"><a href="#">${d.writer__first_name} ${d.writer__last_name}</a> in <a href="/${d.category__url}">${d.category__name}</a></span>
+                <span class="date-read">
+                    ${d.dt_add}
+                    <span class="mx-1">&bullet;</span> ${d.read_time} min read <span class="icon-star2"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          `;
+        $("#post-list").append(html);  
+      });
+    });
+  })
+
+  </script>
 {% endblock %}

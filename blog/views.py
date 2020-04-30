@@ -28,6 +28,40 @@ def home(request,template_name='web/home.html'):
     }
     return render(request,template_name,context)
 
+def load_more(request):
+    try:
+        last_post = Post.objects.get(pk=request.GET.get('last_id')) 
+    except:
+        return JsonResponse({'data':None})
+    try:
+        category = Category.objects.get(pk=request.GET.get('category'))
+        filter_category = Q(category=category)
+    except:
+        category = None
+        filter_category = Q()
+
+    active_post = Post.objects.select_related('writer','category',).prefetch_related('tags')\
+        .order_by('-dt_add').filter(
+            Q(is_active=True,dt_add__lt=last_post.dt_add) and filter_category
+        )
+    post_list = []
+    for ap in active_post:
+        data = {
+            'id':ap.id,
+            'url':ap.url,
+            'thumbnail__url':ap.thumbnail.url,
+            'heading':ap.heading,
+            'snippet':ap.snippet,
+            'writer__first_name':ap.writer.first_name,
+            'writer__last_name':ap.writer.last_name,
+            'category__url':ap.category.url,
+            'category__name':ap.category.name,
+            'dt_add':ap.dt_add.strftime('%b %d, %Y'),
+            'read_time':ap.read_time,
+        }
+        post_list.append(data)
+    return JsonResponse({'data':post_list})
+
 def categorized(request,category,template_name='web/category.html'):
     try:
         category = Category.objects.get(url=category)

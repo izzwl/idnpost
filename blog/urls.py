@@ -7,6 +7,7 @@ urlpatterns = [
     path('',views.home,name='home'),
     path('contact',views.contact,name='contact'),
     path('subscribe',views.subscribe,name='subscribe'),
+    path('load_more',views.load_more,name='load_more'),
     path('<slug:category>',views.categorized,name='category'),
     path('<slug:category>/<slug:post>',views.read_post,name='read_post'),
 ]
