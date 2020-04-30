@@ -5,7 +5,7 @@
 {% block navlogo %}
 <a href="/" class="site-logo">
   <img src="{% static 'logo/logo.png' %}" height="50px" alt='idnpost.id'/>
-  <img src="{{ category.thumbnail.url }}" height="40px" alt='{{category.name}}'/> 
+  <img src="{% if category.thumbnail %}{{ category.thumbnail.url }}{% endif %}" height="40px" alt='{{category.name}}'/> 
 </a>
 {% endblock %}
 
